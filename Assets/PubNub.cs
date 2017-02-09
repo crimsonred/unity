@@ -1,16 +1,25 @@
 ﻿using System;
+using UnityEngine;
 
 namespace PubNubAPI
 {
     public class PubNub
     {
+        private PNConfiguration PNConfig { get; set;}
         public PubNub (PNConfiguration pnConfiguration)
         {
+            PNConfig = pnConfiguration;
         }
 
         public SubscribeBuilder Subscribe(){
             return new SubscribeBuilder ();
         }
+
+        public TimeBuilder Time(){
+            Debug.Log ("TimeBuilder");
+            return new TimeBuilder (PNConfig);
+        }
+
        /* #region "PubNub API Channel Methods"
 
         #region "Subscribe Methods"

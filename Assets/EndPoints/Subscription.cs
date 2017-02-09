@@ -201,7 +201,7 @@ namespace PubNubAPI
             if(HasChannels || HasChannelGroups){
                 HasChannelsOrChannelGroups = true;
             }
-            CompiledUserState = Helpers.BuildJsonUserState (AllSubscribedChannelsAndChannelGroups);
+            //CompiledUserState = Helpers.BuildJsonUserState (AllSubscribedChannelsAndChannelGroups);
         }
 
         public Dictionary<string, object> EditUserState(Dictionary<string, object> newUserState, 
@@ -241,7 +241,7 @@ namespace PubNubAPI
             bool stateChanged = false;
             if (channelEntitiesDictionary.ContainsKey (channelEntity.ChannelID)) {
 
-                string newState = PubnubUnity.JsonPluggableLibrary.SerializeToJsonString (userState);
+                /*string newState = PubnubUnity.JsonPluggableLibrary.SerializeToJsonString (userState);
                 if (channelEntitiesDictionary [channelEntity.ChannelID].UserState != null) {
                     string oldState = Helpers.BuildJsonUserState (channelEntitiesDictionary [channelEntity.ChannelID].UserState);
                     if (!oldState.Equals (newState)) {
@@ -253,7 +253,7 @@ namespace PubNubAPI
                 } else {
                     channelEntitiesDictionary [channelEntity.ChannelID].UserState = userState;
                     stateChanged = true;
-                }
+                }*/
 
             } else {
                 channelEntity.ChannelParams.UserState = userState;

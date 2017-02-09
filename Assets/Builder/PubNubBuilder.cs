@@ -1,20 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace PubNubAPI
 {
-    public abstract class PubNubBuilder
+    public class PubNubBuilder<U>
     {
-        public PubNubBuilder ()
-        {
+        private PNConfiguration PNConfig { get; set;}
+
+        public PubNubBuilder(PNConfiguration pnConfig){
+            PNConfig = pnConfig;    
         }
 
-        public abstract void Execute();
-        public abstract PubNubBuilder Async<T>();
+        public void Execute (){
+        }
 
-        public abstract PubNubBuilder SetChannels(List<string> channels);
+        public void Async<T>(PNCallback<T> callback, PNOperationType pnOpType){
+            switch(pnOpType)
+            {
+                case PNOperationType.PNTimeOperation:
+                    Debug.Log ("In Async");
+                    NonSubscribeWorker.RunTimeRequest<T> (PNConfig, callback);
+                    break;
+                default:
+                    break;
+            }
+            //return U;
+        }
 
-        public abstract PubNubBuilder SetChannelGroups(List<string> channelGroups);
+        public void SetChannels(List<string> channels){
+            //return U;
+        }
+
+        public void SetChannelGroups(List<string> channelGroups){
+            //return U;
+        }
     }
 }
 

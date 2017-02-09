@@ -6,7 +6,10 @@ namespace PubNubAPI
     {
         public PNConfiguration ()
         {
+            SetSecure = true;
         }
+
+        public bool SetSecure { get; set;}
     }
 }
 
