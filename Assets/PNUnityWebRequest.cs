@@ -572,6 +572,7 @@ namespace PubNubAPI
                 isSubscribeComplete = false;
 
                 subscribeWww =  UnityWebRequest.Get (cp.url);
+               
                 #if (ENABLE_PUBNUB_LOGGING)
                 LoggingMethod.WriteToLog (string.Format ("DateTime {0}, StartCoroutinesByName: {1} running", DateTime.Now.ToString (), cp.crt.ToString ()), LoggingMethod.LevelInfo);
                 #endif

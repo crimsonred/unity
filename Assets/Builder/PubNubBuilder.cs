@@ -15,7 +15,7 @@ namespace PubNubAPI
         public void Execute (){
         }
 
-        public void Async<T>(PNCallback<T> callback, PNOperationType pnOpType){
+        public void Async<T>(Action<T, PNStatus> callback, PNOperationType pnOpType){
             switch(pnOpType)
             {
                 case PNOperationType.PNTimeOperation:

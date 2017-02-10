@@ -16,9 +16,10 @@ namespace PubNubAPI
 
         #region IPubNubBuilder implementation
 
-        public void Async (PNCallback<PNTimeResult> callback)
+        public void Async(Action<PNTimeResult, PNStatus> callback)
         {
             Debug.Log ("TimeBuilder Async");
+
             pubNubBuilder.Async<PNTimeResult>(callback, PNOperationType.PNTimeOperation);
         }
         #endregion

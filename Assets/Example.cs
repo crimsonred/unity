@@ -17,12 +17,15 @@ public class Example : MonoBehaviour {
         List<string> listChannels = new List<string> (){"channel1", "channel2"};
         //pubnub.Subscribe ().SetChannelGroups (listChannelGroups).SetChannels(listChannels).Execute();
         Debug.Log ("before Time");
-        pubnub.Time ().Async (new PNTimeCallback<PNTimeResult>(){
-            /*OnResponse = (PNTimeResult result, PNStatus status) =>
-            {
-                
-            }*/
-            //Debug.Log ("in Time")
+        /*pubnub.Time ().Async (new PNTimeCallback<PNTimeResult>(
+            (r, s) => {
+                Debug.Log ("in Time");
+            }
+        ));*/
+        pubnub.Time ().Async ((result, status) => {
+            Debug.Log ("in Time");
+            Debug.Log (result);
+            Debug.Log (status);
         });
         //pubnub.Time ().Async (new PNCallback<PNTimeResult>(){
 
