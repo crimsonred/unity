@@ -18,9 +18,10 @@ namespace PubNubAPI
         public void Async<T>(Action<T, PNStatus> callback, PNOperationType pnOpType){
             switch(pnOpType)
             {
-                case PNOperationType.PNTimeOperation:
+            case PNOperationType.PNTimeOperation:
                     Debug.Log ("In Async");
-                    NonSubscribeWorker.RunTimeRequest<T> (PNConfig, callback);
+                    NonSubscribeWorker<T> nsw = new NonSubscribeWorker<T> ();
+                    nsw.RunTimeRequest (PNConfig, callback);
                     break;
                 default:
                     break;

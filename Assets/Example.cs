@@ -24,8 +24,8 @@ public class Example : MonoBehaviour {
         ));*/
         pubnub.Time ().Async ((result, status) => {
             Debug.Log ("in Time");
-            Debug.Log (result);
-            Debug.Log (status);
+            Debug.Log (result.TimeToken);
+            Debug.Log (status.Error);
         });
         //pubnub.Time ().Async (new PNCallback<PNTimeResult>(){
 

@@ -5,10 +5,31 @@ namespace PubNubAPI
 {
     public class PubNub
     {
-        private PNConfiguration PNConfig { get; set;}
+        public PNConfiguration PNConfig { get; set;}
+
+        /// <summary>
+        /// Gets or sets the set game object.
+        /// This method should be called before init
+        /// </summary>
+        /// <value>The set game object.</value>
+        public static GameObject GameObjectRef { get; set;}
+        private bool localGobj;
+
         public PubNub (PNConfiguration pnConfiguration)
         {
             PNConfig = pnConfiguration;
+            if (GameObjectRef == null) {
+                #if (ENABLE_PUBNUB_LOGGING)
+                LoggingMethod.WriteToLog ("Initilizing new GameObject", LoggingMethod.LevelInfo);
+                #endif
+                GameObjectRef = new GameObject ("PubnubGameObject");
+                localGobj = true;
+            } else {
+                #if (ENABLE_PUBNUB_LOGGING)
+                LoggingMethod.WriteToLog ("Reusing already initialized GameObject", LoggingMethod.LevelInfo);
+                #endif
+                localGobj = false;
+            }
         }
 
         public SubscribeBuilder Subscribe(){

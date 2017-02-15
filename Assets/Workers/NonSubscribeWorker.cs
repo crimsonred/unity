@@ -3,15 +3,16 @@ using UnityEngine;
 
 namespace PubNubAPI
 {
-    public class NonSubscribeWorker
+    public class NonSubscribeWorker<T>
     {
         public NonSubscribeWorker ()
         {
         }
 
         private static GameObject gobj;
+        Action<T, PNStatus> Callback;
 
-        public static void RunTimeRequest<T>(PNConfiguration pnConfig, Action<T, PNStatus> callback){
+        public void RunTimeRequest(PNConfiguration pnConfig, Action<T, PNStatus> callback){
             //Uri request = BuildRequests.BuildTimeRequest (this.SessionUUID, this.ssl, this.Origin);
 
             RequestState<T> requestState = new RequestState<T> ();
@@ -27,29 +28,63 @@ namespace PubNubAPI
             requestState.UUID = uuid;
             return requestState;*/
             Debug.Log ("RunTimeRequest");
-            gobj = new GameObject ("PubnubGameObject");
+
+            //save callback
+            this.Callback = callback;
+
             Debug.Log ("RunTimeRequest gobj");
-            PNUnityWebRequest webRequest = gobj.AddComponent<PNUnityWebRequest> ();
-            webRequest.NonSubCoroutineComplete += CoroutineCompleteHandler<T>;
+            PNUnityWebRequest webRequest = PubNub.GameObjectRef.AddComponent<PNUnityWebRequest> ();
+            webRequest.NonSubCoroutineComplete += CoroutineCompleteHandler;
             Debug.Log ("RunTimeRequest coroutine");
             //PNCallback<T> timeCallback = new PNTimeCallback<T> (callback);
-            webRequest.Run<T>("Https://pubsub.pubnub.com/time/0", requestState, 10, 0, callback);
+            webRequest.Run<T>("Https://pubsub.pubnub.com/time/0", requestState, 10, 0);
             Debug.Log ("after coroutine");
 
         }
-        private static void CoroutineCompleteHandler<T> (object sender, EventArgs ea)
+
+        public static T ConvertValue<T,U>(U value) where U : IConvertible
+        {
+            return (T)Convert.ChangeType(value, typeof(T));
+        }
+
+        public static T ConvertValue<T>(string value)
+        {
+            return (T)Convert.ChangeType(value, typeof(T));
+        }
+
+        private void CoroutineCompleteHandler (object sender, EventArgs ea)
         {
             CustomEventArgs<T> cea = ea as CustomEventArgs<T>;
 
             try {
                 if (cea != null) {
-                    PNCallback<T> timeCallback = new PNCallback<T> ();
+                    Debug.Log ("inCoroutineCompleteHandler ");
+                    //PNTimeCallback<T> timeCallback = new PNTimeCallback<T> ();
                     PNTimeResult pnTimeResult = new PNTimeResult();
                     pnTimeResult.TimeToken = cea.Message;
                     PNStatus pnStatus = new PNStatus();
                     pnStatus.Error = false;
+                    /*if (pnTimeResult is T) {
+                        //return (T)pnTimeResult;
+                        //Callback((T)pnTimeResult, pnStatus);
+                    } else {*/
+                        try {
+                            //return (T)Convert.ChangeType(pnTimeResult, typeof(T));
+                            Debug.Log ("Callback");
+                            Callback((T)Convert.ChangeType(pnTimeResult, typeof(T)), pnStatus);
 
-                    timeCallback.OnResponse(pnTimeResult, pnStatus);
+                            Debug.Log ("After Callback");
+                        } catch (InvalidCastException ice) {
+                            //return default(T);
+                            Debug.Log (ice.ToString());
+                            throw ice;
+                        }
+                    //}
+
+                    //T pnTimeResult2 = (T)pnTimeResult as object;
+                    //Callback(pnTimeResult2, pnStatus);
+                    //PNTimeResult pnTimeResult2 = (T)pnTimeResult;
+                    //timeCallback.OnResponse(pnTimeResult, pnStatus);
 
                     /*if (cea.PubnubRequestState != null) {
                         ProcessCoroutineCompleteResponse<T> (cea);
