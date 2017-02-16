@@ -2,7 +2,7 @@
 
 namespace PubNubAPI
 {
-    public class PNTimeResult
+    public class PNTimeResult: PNResult
     {
         public string TimeToken { get; set;}
         public PNTimeResult ()

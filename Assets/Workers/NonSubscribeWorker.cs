@@ -3,14 +3,35 @@ using UnityEngine;
 
 namespace PubNubAPI
 {
-    public class NonSubscribeWorker<T>
+    public class NonSubscribeWorker<T>: IDisposable
     {
-        public NonSubscribeWorker ()
+        public static int InstanceCount;
+        private static object syncRoot = new System.Object();
+        #region IDisposable implementation
+
+        public void Dispose ()
         {
+            lock (syncRoot) {
+                InstanceCount--;
+            }
         }
 
-        private static GameObject gobj;
+        #endregion
+
+
+        public NonSubscribeWorker ()
+        {
+            lock (syncRoot) {
+                InstanceCount++;
+            }
+        }
+            
         Action<T, PNStatus> Callback;
+
+        public void Queue(PNConfiguration pnConfig, Action<T, PNStatus> callback){
+            
+
+        }
 
         public void RunTimeRequest(PNConfiguration pnConfig, Action<T, PNStatus> callback){
             //Uri request = BuildRequests.BuildTimeRequest (this.SessionUUID, this.ssl, this.Origin);
@@ -29,6 +50,8 @@ namespace PubNubAPI
             return requestState;*/
             Debug.Log ("RunTimeRequest");
 
+
+
             //save callback
             this.Callback = callback;
 
@@ -37,7 +60,7 @@ namespace PubNubAPI
             webRequest.NonSubCoroutineComplete += CoroutineCompleteHandler;
             Debug.Log ("RunTimeRequest coroutine");
             //PNCallback<T> timeCallback = new PNTimeCallback<T> (callback);
-            webRequest.Run<T>("Https://pubsub.pubnub.com/time/0", requestState, 10, 0);
+            webRequest.Run<T>("https://pubsub.pubnub.com/time/0", requestState, 10, 0);
             Debug.Log ("after coroutine");
 
         }

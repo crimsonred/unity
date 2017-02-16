@@ -10,6 +10,8 @@ namespace PubNubAPI
         }
 
         public bool SetSecure { get; set;}
+
+        public int ConcurrentNonSubscribeWorkers { get; set;}
     }
 }
 

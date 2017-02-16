@@ -30,6 +30,7 @@ namespace PubNubAPI
                 #endif
                 localGobj = false;
             }
+            QueueManager queueManager = PubNub.GameObjectRef.AddComponent<QueueManager> ();
         }
 
         public SubscribeBuilder Subscribe(){

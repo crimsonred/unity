@@ -20,8 +20,7 @@ namespace PubNubAPI
             {
             case PNOperationType.PNTimeOperation:
                     Debug.Log ("In Async");
-                    NonSubscribeWorker<T> nsw = new NonSubscribeWorker<T> ();
-                    nsw.RunTimeRequest (PNConfig, callback);
+                    RequestQueue.Instance.Enqueue<T>(PNConfig, callback, PNOperationType.PNTimeOperation, null);
                     break;
                 default:
                     break;
