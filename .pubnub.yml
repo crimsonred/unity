@@ -1,9 +1,51 @@
 --- 
 changelog: 
+   -
+    changes: 
+      - 
+        text: "Cleanup"
+        type: improvement
+    date: Jan 22, 18
+    version: v4.0-beta6
+   -
+    changes: 
+      - 
+        text: "Logging enhancements"
+        type: improvement
+    date: Jan 18, 18
+    version: v4.0-beta5 
+   -
+    changes: 
+      - 
+        text: "Cleanup"
+        type: improvement
+    date: Jan 16, 18
+    version: v4.0-beta4 
+   -
+    changes: 
+      - 
+        text: "Windows Universal compatibility"
+        type: improvement
+    date: Jan 11, 18
+    version: v4.0-beta3 
+   -
+    changes: 
+      - 
+        text: "Leave fixes"
+        type: improvement
+    date: Dec 26, 17
+    version: v4.0-beta2 
+  -
+    changes: 
+      - 
+        text: "All new PubNub Unity SDK"
+        type: improvement
+    date: Dec 11, 17
+    version: v4.0-beta1
   - 
     changes: 
       - 
-        text: “Presence delta intervals”
+        text: "Presence delta intervals"
         type: improvement
     date: Mar 31, 17
     version: v3.7.8
@@ -228,7 +270,8 @@ supported-platforms:
       - Mac OS X 10.8+, with Graphics card DX9 (shader model 3.0) or DX11 with feature level 9.3 capabilities; and CPU SSE2 instruction set support.
     editors:
       - Unity 5.5.1
+      - Unity 2017.2.0f3
 name: unity
 schema: 1
 scm: github.com/pubnub/unity
-version: “3.7.8”
+version: “v4.0-beta6”
