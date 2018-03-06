@@ -549,10 +549,19 @@ namespace PubNubAPI
             #endif
             if (subscribeMessages.Count >= this.PubNubInstance.PNConfig.MessageQueueOverflowCount)
             {
-                //TODO
-                /*StatusBuilder statusBuilder = new StatusBuilder(pubnubConfig, jsonLib);
-                PNStatus status = statusBuilder.CreateStatusResponse(type, PNStatusCategory.PNRequestMessageCountExceededCategory, asyncRequestState, (int)HttpStatusCode.OK, null);
-                Announce(status);*/
+                PNStatus pnStatus = Helpers.CreatePNStatus(
+                            PNStatusCategory.PNRequestMessageCountExceededCategory,
+                            "",
+                            null,
+                            true,
+                            PNOperationType.PNSubscribeOperation,
+                            PubNubInstance.SubscriptionInstance.AllChannels,
+                            PubNubInstance.SubscriptionInstance.AllChannelGroups,
+                            null,
+                            this.PubNubInstance
+                        );
+
+                CreateEventArgsAndRaiseEvent(pnStatus);
             }
              
             foreach (SubscribeMessage subscribeMessage in subscribeMessages){
@@ -624,8 +633,9 @@ namespace PubNubAPI
 
         protected void ExceptionHandler (RequestState pnRequestState)
         {
-            List<ChannelEntity> channelEntities = PubNubInstance.SubscriptionInstance.AllSubscribedChannelsAndChannelGroups;
             #if (ENABLE_PUBNUB_LOGGING)
+            List<ChannelEntity> channelEntities = PubNubInstance.SubscriptionInstance.AllSubscribedChannelsAndChannelGroups;
+            
             this.PubNubInstance.PNLog.WriteToLog (string.Format ("InExceptionHandler: responsetype"), PNLoggingMethod.LevelInfo);
             string channelGroups = Helpers.GetNamesFromChannelEntities (channelEntities, true);
             string channels = Helpers.GetNamesFromChannelEntities (channelEntities, false);
@@ -733,6 +743,10 @@ namespace PubNubAPI
             }
             long timetoken;
             Utility.TryCheckKeyAndParseLong(pnPresenceEventDict, "timestamp", "timestamp", out log, out timetoken);
+            bool hereNowRefresh = false;
+            if(pnPresenceEventDict.ContainsKey("here_now_refresh")){
+                hereNowRefresh = (bool)pnPresenceEventDict["here_now_refresh"];
+            }
 
             PNPresenceEvent pnPresenceEvent = new PNPresenceEvent (
                 (pnPresenceEventDict.ContainsKey("action"))?pnPresenceEventDict["action"].ToString():"",
@@ -742,7 +756,8 @@ namespace PubNubAPI
                 (pnPresenceEventDict.ContainsKey("state"))?pnPresenceEventDict["state"]:null,
                 Utility.CheckKeyAndConvertObjToStringArr((pnPresenceEventDict.ContainsKey("join"))?pnPresenceEventDict["join"]:null),
                 Utility.CheckKeyAndConvertObjToStringArr((pnPresenceEventDict.ContainsKey("leave"))?pnPresenceEventDict["leave"]:null),
-                Utility.CheckKeyAndConvertObjToStringArr((pnPresenceEventDict.ContainsKey("timeout"))?pnPresenceEventDict["timeout"]:null)
+                Utility.CheckKeyAndConvertObjToStringArr((pnPresenceEventDict.ContainsKey("timeout"))?pnPresenceEventDict["timeout"]:null),
+                hereNowRefresh
             );
             //"action": "join", "timestamp": 1473952169, "uuid": "a7acb27c-f1da-4031-a2cc-58656196b06d", "occupancy": 1
             //"action": "interval", "timestamp": 1490700797, "occupancy": 3, "join": ["Client-odx4y", "test"]

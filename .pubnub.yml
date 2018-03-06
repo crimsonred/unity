@@ -3,6 +3,13 @@ changelog:
    -
     changes: 
       - 
+        text: "Here Now Refresh"
+        type: improvement
+    date: Feb 28, 18
+    version: v4.0-rc2
+   -
+    changes: 
+      - 
         text: "Cleanup"
         type: improvement
     date: Jan 22, 18
@@ -215,8 +222,6 @@ changelog:
     date: ~
     version: v3.6.8.1
 features: 
-  access: 
-    - ACCESS-GRANT
   channel-groups: 
     - CHANNEL-GROUPS-ADD-CHANNELS
     - CHANNEL-GROUPS-REMOVE-CHANNELS
@@ -228,12 +233,15 @@ features:
     - PRESENCE-SET-STATE
     - PRESENCE-GET-STATE
     - PRESENCE-HEARTBEAT
+    - PRESENCE-HERE-NOW-REFRESH
   publish: 
     - PUBLISH-STORE-FLAG
     - PUBLISH-WITH-METADATA
     - PUBLISH-GET
+    - PUBLISH-POST
     - PUBLISH-ASYNC
     - PUBLISH-MESSAGE-TTL
+    - PUBLISH-FIRE
   push: 
     - PUSH-ADD-DEVICE-TO-CHANNELS
     - PUSH-REMOVE-DEVICE-FROM-CHANNELS
@@ -244,6 +252,7 @@ features:
     - STORAGE-INCLUDE-TIMETOKEN
     - STORAGE-START-END
     - STORAGE-COUNT
+    - STORAGE-DELETE-MESSAGES
   subscribe: 
     - SUBSCRIBE-CHANNELS
     - SUBSCRIBE-CHANNEL-GROUPS
@@ -254,8 +263,11 @@ features:
     - SUBSCRIBE-FILTER-EXPRESSION
     - SUBSCRIBE-PUBSUB-V2
     - SUBSCRIBE-PUBLISHER-UUID
+    - REQUEST-MESSAGE-COUNT-EXCEEDED
   time: 
     - TIME-TIME
+  others:
+    - TELEMETRY 
 supported-platforms:
   - 
     version: PubNub Unity SDK
@@ -270,8 +282,8 @@ supported-platforms:
       - Mac OS X 10.8+, with Graphics card DX9 (shader model 3.0) or DX11 with feature level 9.3 capabilities; and CPU SSE2 instruction set support.
     editors:
       - Unity 5.5.1
-      - Unity 2017.2.0f3
+      - Unity 2017.3.0f3
 name: unity
 schema: 1
 scm: github.com/pubnub/unity
-version: “v4.0-beta6”
+version: "v4.0-rc2"

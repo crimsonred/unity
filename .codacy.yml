@@ -4,3 +4,5 @@ exclude_paths:
   - '**/Editor/**'
   - '**/PlayModeTests/**' 
   - '**/ThirdParty/**'
+  - '**/Crypto/MD5.*'
+  

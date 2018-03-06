@@ -105,7 +105,7 @@ namespace PubNubAPI
                     }
                 }
             } else {
-                throw new ArgumentException(string.Format("Channel Group is null"));
+                throw new ArgumentException("Channel Group is null");
             }
             return string.Join(",", multiChannelGroups);
         }
@@ -176,7 +176,7 @@ namespace PubNubAPI
 
         public static bool IsPresenceChannel (string channel)
         {
-            if (channel.LastIndexOf (PresenceChannelSuffix) > 0) {
+            if (channel.LastIndexOf (PresenceChannelSuffix, StringComparison.InvariantCulture) > 0) {
                 return true;
             } else {
                 return false;
@@ -229,17 +229,6 @@ namespace PubNubAPI
             return encodedUri;
         }
 
-        public static string Md5 (string text)
-        {
-            MD5 md5 = new MD5CryptoServiceProvider ();
-            byte[] data = Encoding.Unicode.GetBytes (text);
-            byte[] hash = md5.ComputeHash (data);
-            string hexaHash = "";
-            foreach (byte b in hash)
-                hexaHash += String.Format ("{0:x2}", b);
-            return hexaHash;
-        }
-
         public static long TranslateDateTimeToSeconds (DateTime dotNetUTCDateTime)
         {
             TimeSpan timeSpan = dotNetUTCDateTime - new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -266,7 +255,7 @@ namespace PubNubAPI
         /// <returns></returns>
         public static DateTime TranslatePubnubUnixNanoSecondsToDateTime (long unixNanoSecondTime)
         {
-            double timeStamp = unixNanoSecondTime / 10000000;
+            double timeStamp = (double)unixNanoSecondTime / 10000000;
             DateTime dateTime = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds (timeStamp);
             return dateTime;
         }

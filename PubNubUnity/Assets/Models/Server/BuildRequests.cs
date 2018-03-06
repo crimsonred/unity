@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace PubNubAPI
 {
 
-    public class BuildRequests
+    public static class BuildRequests
     {
 
         #region "Build Requests"
@@ -105,13 +105,16 @@ namespace PubNubAPI
             return BuildRestApiRequest<Uri>(url, PNOperationType.PNRemoveAllPushNotificationsOperation, parameterBuilder.ToString (), pnInstance);
         }
 
-        public static Uri BuildPublishRequest (string channel, string message, bool storeInHistory, string metadata, uint messageCounter, int ttl, bool usePost, PubNubUnity pnInstance)
+        public static Uri BuildPublishRequest (string channel, string message, bool storeInHistory, string metadata, uint messageCounter, int ttl, bool usePost, bool repilicate, PubNubUnity pnInstance)
         {
             StringBuilder parameterBuilder = new StringBuilder ();
             parameterBuilder.AppendFormat ("&seqn={0}", messageCounter.ToString ());
             parameterBuilder.Append ((storeInHistory) ? "" : "&store=0");
             if (ttl >= 0) {
                 parameterBuilder.AppendFormat ("&ttl={0}", ttl.ToString());
+            }
+            if(!repilicate){
+                parameterBuilder.Append("&norep=true");
             }
 
             if (!string.IsNullOrEmpty (metadata) || metadata.Equals("\"\"")) {
@@ -136,7 +139,8 @@ namespace PubNubAPI
                     }
 
                 // Sign Message
-                signature = Utility.Md5 (stringToSign.ToString ());
+                PubnubCrypto pnCrypto = new PubnubCrypto (pnInstance.PNConfig.CipherKey, pnInstance.PNLog);
+                signature = pnCrypto.ComputeHashRaw(stringToSign.ToString ());
             }
 
             // Build URL
@@ -673,7 +677,6 @@ namespace PubNubAPI
                     .Append (parameters);
 
                 // Sign Message
-                signature = Utility.Md5 (stringToSign.ToString ());
                 PubnubCrypto pubnubCrypto = new PubnubCrypto (pnInstance.PNConfig.CipherKey, pnInstance.PNLog);
                 signature = pubnubCrypto.PubnubAccessManagerSign (pnInstance.PNConfig.SecretKey, stringToSign.ToString ());
                 return string.Format("&signature={0}", signature);
@@ -713,32 +716,11 @@ namespace PubNubAPI
                 break;
 
             case PNOperationType.PNPresenceHeartbeatOperation:
-
-                url = AppendUUIDToURL(url, uuid, true);
-                url.Append (parameters);
-                url = AppendAuthKeyToURL(url, authenticationKey, type);
-                url = AppendPNSDKVersionToURL(url, pnsdkVersion, type);
-                break;
-
-            case PNOperationType.PNSetStateOperation:
-
-                url.Append (parameters);
-                url = AppendUUIDToURL(url, uuid, false);
-                url = AppendAuthKeyToURL(url, authenticationKey, type);
-                url = AppendPNSDKVersionToURL(url, pnsdkVersion, type);
-                break;
-
             case PNOperationType.PNGetStateOperation:
+            case PNOperationType.PNPublishOperation:
 
                 url = AppendUUIDToURL(url, uuid, true);
                 url.Append (parameters);
-                url = AppendAuthKeyToURL(url, authenticationKey, type);
-                url = AppendPNSDKVersionToURL(url, pnsdkVersion, type);
-                break;
-            case PNOperationType.PNHereNowOperation:
-
-                url.Append (parameters);
-                url = AppendUUIDToURL(url, uuid, false);
                 url = AppendAuthKeyToURL(url, authenticationKey, type);
                 url = AppendPNSDKVersionToURL(url, pnsdkVersion, type);
                 break;
@@ -749,20 +731,14 @@ namespace PubNubAPI
                 url = AppendAuthKeyToURL(url, authenticationKey, type);
                 url = AppendPNSDKVersionToURL(url, pnsdkVersion, type);
                 break;
-
-            case PNOperationType.PNPublishOperation:
-            
-                url = AppendUUIDToURL(url, uuid, true);
-                url.Append (parameters);
-                url = AppendAuthKeyToURL(url, authenticationKey, type);
-                url = AppendPNSDKVersionToURL(url, pnsdkVersion, type);
-                break;
             case PNOperationType.PNPushNotificationEnabledChannelsOperation:
             case PNOperationType.PNAddPushNotificationsOnChannelsOperation:
             case PNOperationType.PNRemoveAllPushNotificationsOperation:
             case PNOperationType.PNRemovePushNotificationsFromChannelsOperation:
             case PNOperationType.PNAddChannelsToGroupOperation:
             case PNOperationType.PNRemoveChannelsFromGroupOperation:
+            case PNOperationType.PNSetStateOperation:
+            case PNOperationType.PNHereNowOperation:
             
                 url.Append (parameters);
                 url = AppendUUIDToURL (url, uuid, false);
